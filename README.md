@@ -5,7 +5,7 @@ RESTy is an API testing tool that can be run in any browser, allowing a user to 
 
 ## Author: Omar Ewies
 
-* [Deployment](https://oebitw-auth-api.herokuapp.com/)
+* [Deployment](https://resty-oebitw.netlify.app/)
 
 * [Pull Request](https://github.com/oebitw/auth-api/pull/1)
 
