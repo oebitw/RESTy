@@ -1,6 +1,5 @@
 main{
 
-    height: 500px;
     margin: 0 auto;
     width: 90%;
 
@@ -17,17 +16,11 @@ main{
         input{
             padding: 10px;
             width: 25%;
-        }
-
-        button{
-            margin: 15px;
-            padding: 10px;
-            cursor: pointer;
+            margin: 10px;
         }
 
         #buttons{
-            margin-top: 50px;
-
+            margin: 50px;
         }
 
         span{
@@ -44,27 +37,13 @@ main{
             border: 1px solid green;
       
         }
+
+        button{
+            padding: 15px;
+            cursor: pointer;
+        }
     }
 
-    section{
 
-        margin: 50px auto;
-        height: 200px;
-        text-align: center;
-
-        table{
-            width: 100%;
-            border-collapse: collapse;
-
-            tr{
-                height: 30px;
-            }
-        }
-
-        table, th, td{
-            border: 1px solid black;
-        }
-        
-    }
     
 }
