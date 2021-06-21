@@ -1,5 +1,7 @@
 import React from 'react'
 import './form.scss';
+const superagent = require('superagent');
+
 
 
 
@@ -13,88 +15,94 @@ class Form extends React.Component {
         }
     }
 
-    inputChangeHandler = e => {
-        this.setState({ input: e.target.value })
-    }
 
-    urlHandler = () => {
-        this.setState({
-            url: this.state.input,
-            method: this.state.restMethod
-        })
-    }
 
     methodChangeHandler = e => {
-        this.setState({ restMethod: e.target.innerHTML });
+        this.setState({ method: e.target.innerHTML });
     }
 
 
+    handleSubmit = async (e) => {
+        e.preventDefault();
 
+        this.setState({
+            url: e.target.url.value,
+            method: this.state.method,
+        });
+
+        try {
+            let bodyReq = e.target.body.value;
+            const result = await superagent[this.state.method.toLowerCase()](
+                e.target.url.value
+            ).send(bodyReq)
+            let { headers, body } = result;
+            this.props.handler(headers, body, this.state);
+        } catch (e) {
+            console.log(e.message);
+        }
+
+
+    };
 
     render() {
         return (
-            <main>
 
-                <form>
 
-                    <label>
-                        URL:
-                    </label>
+            <form onSubmit={this.handleSubmit}>
 
-                    <input
-                        name="url"
-                        type="text"
-                        placeholder="ENTER: http://api.url"
-                        onChange={this.inputChangeHandler}
-                        required
-                    />
+                <div id="buttons">
+                    <span
+                        className={`button ${this.state.method === 'GET'}`}
+                        onClick={this.methodChangeHandler}
+                    >
+                        GET
+                    </span>
+                    <span
+                        className={`button ${this.state.method === 'POST'}`}
+                        onClick={this.methodChangeHandler}
+                    >
+                        POST
+                    </span>
+                    <span
+                        className={`button ${this.state.method === 'PUT'}`}
+                        onClick={this.methodChangeHandler}
+                    >
+                        PUT
+                    </span>
+                    <span
+                        className={`button ${this.state.method === 'DELETE'}`}
+                        onClick={this.methodChangeHandler}
+                    >
+                        DELETE
+                    </span>
+                </div>
 
-                    <button type="button" onClick={this.urlHandler}>
-                        GO!
-                    </button>
+                <label>
+                    URL:
+                </label>
 
-                    <div id="buttons">
-                        <span
-                            className={`button ${this.state.restMethod === 'GET'}`}
-                            onClick={this.methodChangeHandler}
-                        >
-                            GET
-                        </span>
-                        <span
-                            className={`button ${this.state.restMethod === 'POST'}`}
-                            onClick={this.methodChangeHandler}
-                        >
-                            POST
-                        </span>
-                        <span
-                            className={`button ${this.state.restMethod === 'PUT'}`}
-                            onClick={this.methodChangeHandler}
-                        >
-                            PUT
-                        </span>
-                        <span
-                            className={`button ${this.state.restMethod === 'DELETE'}`}
-                            onClick={this.methodChangeHandler}
-                        >
-                            DELETE
-                        </span>
-                    </div>
+                <input
+                    name="url"
+                    type="text"
+                    placeholder="ENTER: http://api.url"
+                    required
+                />
 
-                </form>
+                <label>
+                    Body Request:
+                </label>
 
-                <section id="result">
-                    <table>
-                        <tr>
-                            <th>URL</th>
-                            <th >Method</th>
-                        </tr>
-                        <tr>
-                            <td>{this.state.url}</td>
-                            <td>{this.state.method}</td>
-                        </tr>
-                    </table>
-                </section>
-            </main>
+                <input type="text" name="body" placeholder="Enter the Request Body ..." />
+
+                <button type="submit">{this.props.prompt}</button>
+
+
+
+            </form>
+
+
+
+
         )
     }
 
