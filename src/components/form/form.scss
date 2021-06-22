@@ -19,6 +19,14 @@ main{
             margin: 10px;
         }
 
+        textarea{
+            padding: 10px;
+            width: 25%;
+            // margin-left: 5%;
+            font-size: 18px;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
         #buttons{
             margin: 50px;
         }
@@ -41,6 +49,10 @@ main{
         button{
             padding: 15px;
             cursor: pointer;
+            // margin-left: 5%;
+            margin-top: 10px;
+            width: 25%;
+            background-color: brown;
         }
     }
 

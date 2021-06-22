@@ -1,8 +1,5 @@
 import React from 'react'
 import './form.scss';
-const superagent = require('superagent');
-
-
 
 
 class Form extends React.Component {
@@ -11,7 +8,8 @@ class Form extends React.Component {
         super(props);
         this.state = {
             url: '',
-            method: ''
+            method: '',
+            body: '',
         }
     }
 
@@ -25,22 +23,14 @@ class Form extends React.Component {
     handleSubmit = async (e) => {
         e.preventDefault();
 
-        this.setState({
+        await this.setState({
             url: e.target.url.value,
             method: this.state.method,
+            body: e.target.body.value,
+
         });
 
-        try {
-            let bodyReq = e.target.body.value;
-            const result = await superagent[this.state.method.toLowerCase()](
-                e.target.url.value
-            ).send(bodyReq)
-            let { headers, body } = result;
-            this.props.handler(headers, body, this.state);
-        } catch (e) {
-            console.log(e.message);
-        }
-
+        this.props.handler(this.state);
 
     };
 
@@ -52,24 +42,28 @@ class Form extends React.Component {
 
                 <div id="buttons">
                     <span
+                        id="GET"
                         className={`button ${this.state.method === 'GET'}`}
                         onClick={this.methodChangeHandler}
                     >
                         GET
                     </span>
                     <span
+                        id="POST"
                         className={`button ${this.state.method === 'POST'}`}
                         onClick={this.methodChangeHandler}
                     >
                         POST
                     </span>
                     <span
+                        id="PUT"
                         className={`button ${this.state.method === 'PUT'}`}
                         onClick={this.methodChangeHandler}
                     >
                         PUT
                     </span>
                     <span
+                        id="DELETE"
                         className={`button ${this.state.method === 'DELETE'}`}
                         onClick={this.methodChangeHandler}
                     >
@@ -77,26 +71,30 @@ class Form extends React.Component {
                     </span>
                 </div>
 
-                <label>
-                    URL:
-                </label>
+
 
                 <input
                     name="url"
                     type="text"
-                    placeholder="ENTER: http://api.url"
+                    placeholder="ENTER URL: http://api.url"
+                    id="url"
                     required
                 />
 
-                <label>
-                    Body Request:
-                </label>
+                <br></br>
 
-                <input type="text" name="body" placeholder="Enter the Request Body ..." />
+                <textarea
+                    type="text"
+                    name="body"
+                    placeholder="Enter the Request body"
+                    rows="10"
+                    cols="40"
+                    id="body"
+                />
+
+                <br></br>
 
                 <button type="submit">{this.props.prompt}</button>
-
-
 
             </form>
 
