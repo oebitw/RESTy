@@ -3,6 +3,13 @@
 ////////// IMPORTS /////////
 ///////////////////////////
 
+
+// Import React
+import React from 'react';
+
+// Import If and Then
+import { If, Then } from 'react-if';
+
 //Import Styles
 import './App.scss';
 
@@ -16,61 +23,130 @@ import Form from './components/form/Form.js';
 import Footer from './components/footer/footer';
 
 // Import Results
-import Results from './components/results/Results'
+import Results from './components/results/Results';
 
-// Import React
-import React from 'react';
+//Import History
+import History from './components/history/History';
+
+
+// superagent
+const superagent = require('superagent');
+
+//parsing history
+let history = JSON.parse(localStorage.getItem('history'));
+
+
 
 class App extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
-      count:0,
-      headers:{},
-      response:[],
-      urls:[],
-      methods:[]
+      count: 0,
+      headers: {},
+      response: {},
+      history: {},
+      storageArray: history || [],
+      trigger: false,
+      fetching: false,
+
     }
   }
 
-  formHandler= (headers,body,state)=>{
-    this.state.urls.push(state.url);
-    this.state.methods.push(state.method);
-    
+  formHandler = async (state) => {
+
+    this.setState({ fetching: true, trigger: true });
+
+    try {
+      let reqBody = state.body;
+
+      if (state.method === 'POST' || state.method === 'PUT') {
+        const result = await superagent[state.method.toLowerCase()](state.url)
+          .send(reqBody);
+
+        let { headers, body } = result;
+
+        this.handler(headers, body, state);
+
+      } else {
+        const result = await superagent[state.method.toLowerCase()](state.url);
+        let { headers, body } = result;
+        this.handler(headers, body, state);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
+  handler = (headers, body, state) => {
     if (headers && body) {
+      let storageData = {
+        id: `state.method state.url`,
+        url: state.url,
+        method: state.method,
+        body: state.body,
+      };
+      this.state.storageArray.push(storageData);
+
+      const newArr = [];
+      const map = new Map();
+      for (const item of this.state.storageArray) {
+        if (!map.has(item.id)) {
+          map.set(item.id, true);
+          newArr.push({
+            id: item.id,
+            url: item.url,
+            method: item.method,
+            body: item.body,
+          });
+        }
+      }
+
       this.setState({
         count: body.count || this.state.count + 1,
         headers: headers,
         response: body,
+        storageArray: [...newArr],
+        fetching: false,
       });
+      localStorage.setItem('history', JSON.stringify(newArr));
     } else {
       this.setState({
         count: this.state.count + 1,
-        headers: {message: 'N/A'},
-        response: body
-      })
+        headers: null,
+        response: body,
+        fetching: false,
+      });
     }
+  };
 
 
-
-  }
 
   render() {
 
-    return(
+    return (
       <>
-      <Header />
-      <main>
+        <Header />
+        <main>
 
-        <Form prompt="GO!" handler={this.formHandler} />
+          <Form prompt="GO!" handler={this.formHandler} />
 
-        <section id="results">
-          <Results props={this.state} />
-        </section>
+          <section id="results">
 
-      </main>
+            <History props={this.state.storageArray} />
 
-      <Footer />
+            <If condition={this.state.trigger}>
+              <Then>
+                <Results props={this.state} />
+              </Then>
+            </If>
+
+
+          </section>
+
+        </main>
+
+        <Footer />
       </>
     )
 
