@@ -13,7 +13,7 @@ function Results({ props }) {
           <div id="loader">
             <h3>Loading...</h3>
             <Loading
-              type="Ball"
+              type="Bars"
               color="red"
               height={75}
               width={75}

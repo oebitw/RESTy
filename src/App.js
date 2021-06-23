@@ -60,10 +60,17 @@ class App extends React.Component {
       let reqBody = state.body;
 
       if (state.method === 'POST' || state.method === 'PUT') {
+        let parsed=JSON.parse(reqBody);
+
         const result = await superagent[state.method.toLowerCase()](state.url)
-          .send(reqBody);
+          .send(parsed);
+
+          console.log(reqBody,'ReqBody')
+
 
         let { headers, body } = result;
+
+        console.log(result,'RRRRRR')
 
         this.handler(headers, body, state);
 
@@ -73,7 +80,7 @@ class App extends React.Component {
         this.handler(headers, body, state);
       }
     } catch (error) {
-      console.log(error);
+      console.log(error,'eeeee');
     }
   }
 
