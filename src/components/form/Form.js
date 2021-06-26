@@ -1,5 +1,17 @@
+/////////////////////////////
+////////// IMPORTS /////////
+///////////////////////////
+
+// Import React
 import React from 'react'
+
+// Import Style
 import './form.scss';
+
+
+//////////////////////////
+///// Form Component/////
+////////////////////////
 
 
 class Form extends React.Component {
@@ -34,8 +46,27 @@ class Form extends React.Component {
 
     };
 
+    historyData = (data) => {
+        const input = document.getElementById('url');
+        input.value = data.url;
+        const selected = document.getElementById(data.method);
+        selected.click();
+        const text = document.getElementById('body');
+        text.value = data.body;
+    }
+
+
+    componentDidMount() {
+        console.log(this.props.data);
+        if (this.props.data) {
+          this.historyData(this.props.data)
+        }
+    }
+
     render() {
         return (
+
+            <>
 
 
             <form onSubmit={this.handleSubmit}>
@@ -94,9 +125,11 @@ class Form extends React.Component {
 
                 <br></br>
 
-                <button type="submit">{this.props.prompt}</button>
+                <button type="submit"> {this.props.prompt} GO</button>
 
             </form>
+
+            </>
 
 
 
