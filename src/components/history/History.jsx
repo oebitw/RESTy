@@ -1,9 +1,26 @@
+
+//================================================//
+// This is the History Component in the Home Page//
+//==============================================//
+
+
+
+////////////////////
+//// Imports //////
+//////////////////
+
+// React
 import React from 'react';
+
+//Styles
 import './history.scss';
 
 
+//////////////////////////
+////History Component ///
+////////////////////////
 
-function History({ props }) {
+function History({ props,handler }) {
     return (
         <section id="history">
             <table>
@@ -17,8 +34,8 @@ function History({ props }) {
                     {props.map((val, i) => {
                         return (
                             <tr
-                                key={i + val.method + val.url}
-                                onClick={historyHandler}
+                                key={i + val.method + val.url + val.body}
+                                onClick={handler}
                             >
                                 <th  id={`his${val.method}`}>{val.method}</th>
                                 <td>{val.url}</td>
@@ -30,26 +47,6 @@ function History({ props }) {
             </table>
         </section>
     );
-
-
-
-
-}
-
-function historyHandler(e) {
-    let method = e.currentTarget.childNodes[0].innerHTML;
-    let url = e.currentTarget.childNodes[1].innerHTML;
-    let body = e.currentTarget.childNodes[2].innerHTML;
-
-    const input = document.getElementById(`url`);
-    input.value = url;
-
-    const selected = document.getElementById(`${method}`);
-    selected.click();
-
-    const text = document.getElementById('body');
-    text.value = body;
-
 }
 
 export default History
